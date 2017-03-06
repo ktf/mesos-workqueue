@@ -89,6 +89,8 @@ WorkqueueScheduler::resourceOffers(SchedulerDriver* driver,
 
     if (!curl) {
       std::cerr << "Unable to perform curl." << std::endl;
+      for (auto & offer : offers)
+        driver->declineOffers(offer.id());
       return;
     }
     std::stringstream buffer;
@@ -101,6 +103,8 @@ WorkqueueScheduler::resourceOffers(SchedulerDriver* driver,
     curl_easy_cleanup(curl);
     if (res != CURLE_OK) {
       std::cerr << "Server not responding." << std::endl;
+      for (auto & offer : offers)
+        driver->declineOffers(offer.id());
       return;
     }
     std::string key;
